@@ -1,4 +1,4 @@
-# desafio_tecnico
+# ClientManager
 
 Aplicação fullstack construída em **Vue 3 (front-end)** e **Node.js + Express (back-end)** com banco de dados **MySQL**.  
 Permite realizar operações de **CRUD de clientes** (criar, listar, editar e excluir) com validações, máscaras e integração com a API do **ViaCEP** para preenchimento automático de endereço.
