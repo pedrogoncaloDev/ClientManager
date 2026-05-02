@@ -37,15 +37,15 @@ Permite realizar operações de **CRUD de clientes** (criar, listar, editar e ex
 
 1. **Clone o repositório**:
     ```bash
-    git clone https://github.com/pedrogoncaloDev/desafio_tecnico.git
-    cd desafio_tecnico
+    git clone https://github.com/pedrogoncaloDev/ClientManager.git
+    cd ClientManager
 
 2. **Configurar o Banco de Dados MySQL**:
    1. *Crie o banco*
       ```bash
-      CREATE DATABASE desafio;
+      CREATE DATABASE ClientManager;
   
-      USE desafio;
+      USE ClientManager;
       
       CREATE TABLE clientes (
         ID INT AUTO_INCREMENT PRIMARY KEY,
@@ -90,7 +90,7 @@ Permite realizar operações de **CRUD de clientes** (criar, listar, editar e ex
         DB_PORT=3306
         DB_USER=seu_usuario
         DB_PASS=seu_senha
-        DB_NAME=desafio
+        DB_NAME=ClientManager
         CORS_ORIGIN=http://localhost:5173
         
         # Servidor
