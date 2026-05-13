@@ -6,10 +6,10 @@ const router = express.Router();
 
 // --------- Schemas (Zod) ----------
 const baseSchema = z.object({
-    idUsuario: z.coerce.number().int().positive(),
-    Codigo: z.string().min(1).max(15),
-    Nome: z.string().min(1).max(150),
-    CPF_CNPJ: z.string().min(1).max(20),
+    idUsuario: z.coerce.number().int().positive(),   // OBRIGATÓRIO
+    Codigo: z.string().min(1).max(15),               // OBRIGATÓRIO
+    Nome: z.string().min(1).max(150),                // OBRIGATÓRIO
+    CPF_CNPJ: z.string().min(1).max(20),             // OBRIGATÓRIO
     CEP: z.coerce.number().int().nullable().optional(),
     Logradouro: z.string().max(100).nullable().optional(),
     Endereco: z.string().max(120).nullable().optional(),
@@ -113,19 +113,52 @@ router.post('/', async (req, res, next) => {
                 Bairro, Cidade, UF, Complemento, Fone, LimiteCredito, Validade
             ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
         `;
+
+        // Monta o endereço completo
+        const endereco = [
+            payload.Logradouro,
+            payload.Numero ? `nº ${payload.Numero}` : null,
+            payload.Bairro,
+            payload.Cidade
+        ]
+        .filter(Boolean) 
+        .join(', ');
+
         const params = [
-            payload.idUsuario, payload.Codigo, payload.Nome, payload.CPF_CNPJ,
-            payload.CEP ?? null, payload.Logradouro ?? null, payload.Endereco ?? null,
-            payload.Numero ?? null, payload.Bairro ?? null, payload.Cidade ?? null,
-            payload.UF ?? null, payload.Complemento ?? null, payload.Fone ?? null,
-            payload.LimiteCredito ?? null, payload.Validade ?? null
+            payload.idUsuario,
+            payload.Codigo,
+            payload.Nome,
+            payload.CPF_CNPJ,
+            payload.CEP ?? null,
+            payload.Logradouro ?? null,
+            endereco || null,
+            payload.Numero ?? null,
+            payload.Bairro ?? null,
+            payload.Cidade ?? null,
+            payload.UF ?? null,
+            payload.Complemento ?? null,
+            payload.Fone ?? null,
+            payload.LimiteCredito ?? null,
+            payload.Validade ?? null
         ];
 
         const [result] = await pool.query(sql, params);
         const [rows] = await pool.query(`SELECT * FROM clientes WHERE ID = ?`, [result.insertId]);
         res.status(201).json(rows[0]);
     } catch (err) {
-        next(err);
+         // Se for erro do Zod, retorna 400 com os detalhes
+        if (err.errors) {
+            return res.status(400).json({
+                error: "Erro de validação",
+                details: err.errors
+            });
+        }
+
+        // Outros erros (DB, etc.)
+        console.error("Erro inesperado:", err);
+        res.status(500).json({
+            error: "Erro interno no servidor"
+        });
     }
 });
 
