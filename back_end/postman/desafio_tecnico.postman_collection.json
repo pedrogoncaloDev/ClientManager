@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "bf860799-8927-4b49-ab00-1dd23ffa829a",
-		"name": "desafio_tecnico",
+		"name": "ClientManager",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "25030199"
 	},
